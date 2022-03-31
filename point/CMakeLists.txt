@@ -1,0 +1,14 @@
+cmake_minimum_required(VERSION 3.0.0)
+project(point)
+
+set(CMAKE_C_FLAGS ${CMAKE_C_FLAGS} "-lm -g -O0 -Wall -W -fprofile-arcs -ftest-coverage")
+set(POINT_LIBRARIES)
+set(POINT_INCLUDE_DIRS)
+
+file(GLOB SOURCES *.c)
+file(GLOB INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_library(${PROJECT_NAME} STATIC ${SOURCES})
+
+set(POINT_LIBRARIES ${PROJECT_NAME} PARENT_SCOPE)
+set(POINT_INCLUDE_DIRS ${INCLUDE_DIRS} PARENT_SCOPE)
