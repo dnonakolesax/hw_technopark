@@ -1,14 +1,14 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-    #include "../k_means_classic/k_means.h"
+    #include "k_means.h"
 }
 
-TEST (main_test, main_test) {
-    K_means* k_means = NULL;
-    EXPECT_EQ (0, create_points(&k_means));
-    EXPECT_EQ (0, proceed_algorithm(k_means));
-    EXPECT_EQ (0, delete_points (&k_means));
+TEST (evil_test, evil_test) {
+  K_means* k_means = NULL;
+  EXPECT_EQ (0, create_points(&k_means, 3333333, 33));
+  EXPECT_EQ (0, proceed_algorithm(k_means));
+  EXPECT_EQ (0, delete_points (&k_means));
 }
 
 int main(int argc, char** argv) {

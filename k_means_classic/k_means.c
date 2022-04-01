@@ -23,10 +23,10 @@ int find_cluster_center (K_means const* k_means, size_t cluster_number) {
    return 0;
 }
 
-int create_points (K_means** k_means) {
+int create_points (K_means** k_means,size_t points,size_t clusters) {
     K_means* temp = (K_means*)malloc(sizeof(K_means));
-    temp->amount_of_clusters=33;
-    temp->amount_of_points=33000000;
+    temp->amount_of_clusters=clusters;
+    temp->amount_of_points=points;
     if (temp->amount_of_clusters>temp->amount_of_points) {
         free (temp);
         return (-1);

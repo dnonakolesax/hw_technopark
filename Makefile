@@ -1,8 +1,8 @@
 .PHONY: build assync static test coverage linter
 
 build:
-	apt install libgtest-dev
-	apt install lcov
+	sudo apt install libgtest-dev
+	sudo apt install lcov
 	mkdir build
 	mkdir log
 
@@ -22,11 +22,12 @@ test:
 	@rm -r build
 
 coverage:
-	@echo "ASYNC LIBRARY"
+	@echo "ASSYNC LIBRARY"
 	@cd build && cmake .. -DASSYNC=ON -DTEST=ON > ../log/cmakelog_static.txt && make > ../log/makelog_static.txt && ./test/hw2_test
 	@cd build && lcov -t "test/hw2_test" -o coverage.info -c -d k_means_multiprocess/ && genhtml -o report coverage.info > ../log/async_cov.txt
-	
-
+	@echo "STATIC LIBRARY"
+	@cd build && cmake .. -DASSYNC=OFF -DTEST=ON > ../log/cmakelog_static.txt && make > ../log/makelog_static.txt && ./test/hw2_test
+	@cd build && lcov -t "test/hw2_test" -o coverage.info -c -d k_means_classic/ && genhtml -o report coverage.info > ../log/static_cov.txt
 linter:
 	@cppcheck main.c
 	@cppcheck k_means_classic/k_means.c

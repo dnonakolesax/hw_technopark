@@ -1,6 +1,6 @@
 #include "k_means.h"
 #include "../point/point.h"
-#include "stdio.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ipc.h>
@@ -59,10 +59,10 @@ static void Handler(int sig_num) {
   }
 }
 
-int create_points (K_means** k_means) {
+int create_points (K_means** k_means,size_t points,size_t clusters) {
     K_means* temp = (K_means*)mmap(NULL, sizeof(K_means), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-    temp->amount_of_clusters=33;
-    temp->amount_of_points=33000000; 
+    temp->amount_of_clusters=clusters;
+    temp->amount_of_points=points; 
     if (temp->amount_of_clusters > temp->amount_of_points) {
         munmap(temp, sizeof(K_means));
         return -1;
@@ -95,7 +95,6 @@ int delete_points (K_means** k_means) {
     munmap(temp, sizeof(k_means));
     temp = NULL;
     *k_means = temp;
-    printf ("Я узбек 2\n");
    return 0;
 }
 
