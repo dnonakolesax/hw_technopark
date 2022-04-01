@@ -1,0 +1,25 @@
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: gassanov/dz1_docker
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build
+
+  test:
+    runs-on: ubuntu-latest
+    container: gassanov/dz1_docker
+    needs: [build]
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build && make test  
+  coverage:
+    runs-on: ubuntu-latest
+    container: gassanov/dz1_docker
+    needs: [test]
+    steps:
+    - uses: actions/checkout@v2
+    - run: make build && make test && make coverage
+    - uses: actions/upload-artifact@v2

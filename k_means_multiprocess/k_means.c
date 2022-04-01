@@ -41,7 +41,7 @@ void read_message(int qid, char* text, long type) {
     if (msgrcv(qid, &q_buf, MAX_SEND_SIZE, type, 0) < 0) {
         printf("Failed to read message from queue\n");
     } else {
-       // printf("Received %s\n", q_buf.mtext);
+       printf("Received message %s\n", q_buf.mtext);
     }
 }
 
@@ -151,7 +151,6 @@ int proceed_algorithm (K_means* k_means) {
     } else if (pids[i] == 0) {
       start_child_work(msgid, k_means);
     } else {
-    //  printf("Created process = %d\n", pids[i]);
     }
   }
   char send_tmp[MAX_SEND_SIZE] = {0};
@@ -193,7 +192,6 @@ int proceed_algorithm (K_means* k_means) {
   } while (((double)changed / (double)k_means->amount_of_points) > ERRRATE);
   for (size_t i = 0; i < amount_of_processes; ++i) {
     kill(pids[i], SIGKILL);
-    //printf("Killed %d\n", pids[i]);
   }
   msgctl(msgid, IPC_RMID, NULL);
   return SUCCESS;
@@ -215,7 +213,6 @@ int find_cluster_center (K_means const* k_means, size_t cluster_number) {
         k_means->clusters[cluster_number].y = result.y / amount_of_points_in_cluster;
         k_means->clusters[cluster_number].z = result.z / amount_of_points_in_cluster;
     }
-   // printf ("Success found center!\n");
    return 0;
 }
 
