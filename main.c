@@ -7,6 +7,5 @@ int main () {
     create_points(&k_means);
     proceed_algorithm(k_means);
     delete_points (&k_means);
-    printf ("Uzbek\n");
     return 0;
 }
