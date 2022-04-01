@@ -1,6 +1,10 @@
 #include "k_means.h"
 #include "../point/point.h"
+<<<<<<< Updated upstream
 #include "stdio.h"
+=======
+#include <stdio.h>
+>>>>>>> Stashed changes
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ipc.h>
@@ -41,7 +45,11 @@ void read_message(int qid, char* text, long type) {
     if (msgrcv(qid, &q_buf, MAX_SEND_SIZE, type, 0) < 0) {
         printf("Failed to read message from queue\n");
     } else {
+<<<<<<< Updated upstream
        // printf("Received %s\n", q_buf.mtext);
+=======
+       printf("Received message %s\n", q_buf.mtext);
+>>>>>>> Stashed changes
     }
 }
 
@@ -59,10 +67,17 @@ static void Handler(int sig_num) {
   }
 }
 
+<<<<<<< Updated upstream
 int create_points (K_means** k_means) {
     K_means* temp = (K_means*)mmap(NULL, sizeof(K_means), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
     temp->amount_of_clusters=33;
     temp->amount_of_points=33000000; 
+=======
+int create_points (K_means** k_means,size_t points,size_t clusters) {
+    K_means* temp = (K_means*)mmap(NULL, sizeof(K_means), PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+    temp->amount_of_clusters=clusters;
+    temp->amount_of_points=points; 
+>>>>>>> Stashed changes
     if (temp->amount_of_clusters > temp->amount_of_points) {
         munmap(temp, sizeof(K_means));
         return -1;
@@ -95,6 +110,7 @@ int delete_points (K_means** k_means) {
     munmap(temp, sizeof(k_means));
     temp = NULL;
     *k_means = temp;
+<<<<<<< Updated upstream
     printf ("Я узбек 2\n");
    return 0;
 }
@@ -104,6 +120,14 @@ void StartChildWork(int msgid, K_means* kmeans) {
   char send_tmp[MAX_SEND_SIZE] = {0};
   char recv_tmp[MAX_SEND_SIZE] = {0};
   // Для синхронизации с родителем
+=======
+   return 0;
+}
+
+void start_child_work(int msgid, K_means* kmeans) {
+  char send_tmp[MAX_SEND_SIZE] = {0};
+  char recv_tmp[MAX_SEND_SIZE] = {0};
+>>>>>>> Stashed changes
   signal(SIGUSR1, Handler);
   signal(SIGUSR2, Handler);
   raise(SIGSTOP);
@@ -151,9 +175,14 @@ int proceed_algorithm (K_means* k_means) {
       printf("fork failed\n");
       return -1;
     } else if (pids[i] == 0) {
+<<<<<<< Updated upstream
       StartChildWork(msgid, k_means);
     } else {
     //  printf("Created process = %d\n", pids[i]);
+=======
+      start_child_work(msgid, k_means);
+    } else {
+>>>>>>> Stashed changes
     }
   }
   char send_tmp[MAX_SEND_SIZE] = {0};
@@ -195,7 +224,10 @@ int proceed_algorithm (K_means* k_means) {
   } while (((double)changed / (double)k_means->amount_of_points) > ERRRATE);
   for (size_t i = 0; i < amount_of_processes; ++i) {
     kill(pids[i], SIGKILL);
+<<<<<<< Updated upstream
     //printf("Killed %d\n", pids[i]);
+=======
+>>>>>>> Stashed changes
   }
   msgctl(msgid, IPC_RMID, NULL);
   return SUCCESS;
@@ -217,7 +249,10 @@ int find_cluster_center (K_means const* k_means, size_t cluster_number) {
         k_means->clusters[cluster_number].y = result.y / amount_of_points_in_cluster;
         k_means->clusters[cluster_number].z = result.z / amount_of_points_in_cluster;
     }
+<<<<<<< Updated upstream
    // printf ("Success found center!\n");
+=======
+>>>>>>> Stashed changes
    return 0;
 }
 
@@ -245,4 +280,19 @@ int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t*
     }
   }
   return 0;
+<<<<<<< Updated upstream
+=======
+}
+
+int clusters_output (K_means const* k_means) {
+    for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
+   // printf("num: %zu, x: %f, y: %f\n", i, k_means->clusters[i].x, k_means->clusters[i].y);
+        for (size_t j = 0; j < k_means->amount_of_points; ++j) {
+            if (k_means->points[j].cluster_number == i) {
+               // printf("x: %f, y: %f\n", k_means->points[j].point.x, k_means->points[j].point.y);
+      }
+    }
+  }
+  return 0;
+>>>>>>> Stashed changes
 }
