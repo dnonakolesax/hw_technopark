@@ -18,11 +18,7 @@ typedef struct K_means {
     size_t amount_of_changed_points;
 } K_means;
 
-<<<<<<< Updated upstream
-int create_points (K_means** k_means);
-=======
 int create_points (K_means** k_means,size_t points,size_t clusters);
->>>>>>> Stashed changes
 int find_cluster_center (K_means const* k_means, size_t cluster_number);
 int proceed_algorithm (K_means* k_means);
 int clusters_output (K_means const* k_means);

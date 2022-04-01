@@ -1,17 +1,6 @@
 #include <gtest/gtest.h>
 
 extern "C" {
-<<<<<<< Updated upstream
-    #include "../k_means_classic/k_means.h"
-}
-
-TEST (classic_test, classic_test) {
-    K_means* k_means = NULL;
-    EXPECT_EQ (0, create_points(&k_means));
-    EXPECT_EQ (0, proceed_algorithm(k_means));
-    EXPECT_EQ (0, clusters_output(k_means));
-    EXPECT_EQ (0, delete_points (&k_means));
-=======
     #include "k_means.h"
 }
 
@@ -20,7 +9,6 @@ TEST (evil_test, evil_test) {
   EXPECT_EQ (0, create_points(&k_means, 3333333, 33));
   EXPECT_EQ (0, proceed_algorithm(k_means));
   EXPECT_EQ (0, delete_points (&k_means));
->>>>>>> Stashed changes
 }
 
 int main(int argc, char** argv) {

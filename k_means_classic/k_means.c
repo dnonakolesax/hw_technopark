@@ -1,6 +1,5 @@
 #include "k_means.h"
 #include "../point/point.h"
-#include "stdio.h"
 #define ERRRATE 0.01
 
 int find_cluster_center (K_means const* k_means, size_t cluster_number) {
@@ -19,21 +18,13 @@ int find_cluster_center (K_means const* k_means, size_t cluster_number) {
         k_means->clusters[cluster_number].y = result.y / amount_of_points_in_cluster;
         k_means->clusters[cluster_number].z = result.z / amount_of_points_in_cluster;
     }
-   // printf ("Success found center!\n");
    return 0;
 }
 
-<<<<<<< Updated upstream
-int create_points (K_means** k_means) {
-    K_means* temp = (K_means*)malloc(sizeof(K_means));
-    temp->amount_of_clusters=33;
-    temp->amount_of_points=33000000;
-=======
 int create_points (K_means** k_means,size_t points,size_t clusters) {
     K_means* temp = (K_means*)malloc(sizeof(K_means));
     temp->amount_of_clusters=clusters;
     temp->amount_of_points=points;
->>>>>>> Stashed changes
     if (temp->amount_of_clusters>temp->amount_of_points) {
         free (temp);
         return (-1);
@@ -48,7 +39,6 @@ int create_points (K_means** k_means,size_t points,size_t clusters) {
         temp->points[i].cluster_number=0;
     }
     *k_means = temp;
-    printf ("Success create!\n");
     return 0;
 }
 

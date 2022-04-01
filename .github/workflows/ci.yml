@@ -1,5 +1,4 @@
 on: push
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,15 +9,15 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    container: dnonakolesax/hw2:latest
+    container: dnonakolesax/hw2
     needs: [build]
     steps:
     - uses: actions/checkout@v2
     - run: make build && make test  
   coverage:
     runs-on: ubuntu-latest
-    container: dnonakolesax/hw2:latest
+    container: dnonakolesax/hw2
     needs: [test]
     steps:
     - uses: actions/checkout@v2
-    - run: make build && make coverage
+    - run: make build && make test && make build && make coverage
