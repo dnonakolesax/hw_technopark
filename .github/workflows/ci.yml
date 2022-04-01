@@ -22,4 +22,3 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: make build && make coverage
-    - uses: actions/upload-artifact@v2
