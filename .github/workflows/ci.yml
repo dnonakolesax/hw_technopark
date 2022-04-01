@@ -17,7 +17,7 @@ jobs:
     - run: make build && make test  
   coverage:
     runs-on: ubuntu-latest
-    container: dnonakolesax/hw2:latests
+    container: dnonakolesax/hw2:latest
     needs: [test]
     steps:
     - uses: actions/checkout@v2
