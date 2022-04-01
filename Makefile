@@ -1,8 +1,8 @@
 .PHONY: build assync static test coverage linter
 
 build:
-	sudo apt install libgtest-dev
-	sudo apt install lcov
+	apt install libgtest-dev
+	apt install lcov
 	mkdir build
 	mkdir log
 
