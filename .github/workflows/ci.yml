@@ -21,5 +21,5 @@ jobs:
     needs: [test]
     steps:
     - uses: actions/checkout@v2
-    - run: make build && make test && make coverage
+    - run: make build && make test && make build && make coverage
     - uses: actions/upload-artifact@v2
