@@ -20,4 +20,4 @@ jobs:
     needs: [test]
     steps:
     - uses: actions/checkout@v2
-    - run: make build && make test && make build && make coverage
+    - run: make build && make coverage
