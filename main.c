@@ -1,5 +1,5 @@
 #include "point/point.h"
-#include "k_means_multiprocess/k_means.h"
+#include "k_means.h"
 #include <stdio.h>
 
 int main () {

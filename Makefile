@@ -22,13 +22,10 @@ test:
 	@rm -r build
 
 coverage:
-	@echo "STATIC LIBRARY"
-	@cd build && cmake .. -DASSYNC=OFF -DTEST=ON > ../log/cmakelog_static.txt && make > ../log/makelog_static.txt && ./test/hw2_test 
-	@cd build && lcov -t "test/hw2_test" -o coverage.info -c -d k_means_classic/ && genhtml -o report coverage.info > ../log/static_cov.txt
 	@echo "ASYNC LIBRARY"
-	@cd build && cmake .. -DASSYNC=ON -DTEST=ON > ../log/cmakelog_static.txt && make > ../log/makelog_static.txt && ./tests/hw2_test
-	@cd build && lcov -t "tes/hw2_test" -o coverage.info -c -d k_means_multiprocess/ && genhtml -o report coverage.info > ../log/async_cov.txt
-	@rm -r build
+	@cd build && cmake .. -DASSYNC=ON -DTEST=ON > ../log/cmakelog_static.txt && make > ../log/makelog_static.txt && ./test/hw2_test
+	@cd build && lcov -t "test/hw2_test" -o coverage.info -c -d k_means_multiprocess/ && genhtml -o report coverage.info > ../log/async_cov.txt
+	
 
 linter:
 	@cppcheck main.c

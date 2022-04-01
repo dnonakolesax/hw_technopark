@@ -99,11 +99,9 @@ int delete_points (K_means** k_means) {
    return 0;
 }
 
-void StartChildWork(int msgid, K_means* kmeans) {
- // puts("Child start");
+void start_child_work(int msgid, K_means* kmeans) {
   char send_tmp[MAX_SEND_SIZE] = {0};
   char recv_tmp[MAX_SEND_SIZE] = {0};
-  // Для синхронизации с родителем
   signal(SIGUSR1, Handler);
   signal(SIGUSR2, Handler);
   raise(SIGSTOP);
@@ -151,7 +149,7 @@ int proceed_algorithm (K_means* k_means) {
       printf("fork failed\n");
       return -1;
     } else if (pids[i] == 0) {
-      StartChildWork(msgid, k_means);
+      start_child_work(msgid, k_means);
     } else {
     //  printf("Created process = %d\n", pids[i]);
     }
@@ -242,6 +240,18 @@ int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t*
     if (k_means->points[i].cluster_number != near_cluster) {
       ++(*changed);
       k_means->points[i].cluster_number = near_cluster;
+    }
+  }
+  return 0;
+}
+
+int clusters_output (K_means const* k_means) {
+    for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
+   // printf("num: %zu, x: %f, y: %f\n", i, k_means->clusters[i].x, k_means->clusters[i].y);
+        for (size_t j = 0; j < k_means->amount_of_points; ++j) {
+            if (k_means->points[j].cluster_number == i) {
+               // printf("x: %f, y: %f\n", k_means->points[j].point.x, k_means->points[j].point.y);
+      }
     }
   }
   return 0;
