@@ -4,25 +4,28 @@
 #include "../point/point.h"
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/msg.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <signal.h>
+#include <sys/mman.h>
+#include "../kmeans_common/kmeans_common.h"
 
-typedef struct point_in_cluster {
-    Point point;
-    size_t cluster_number;
-} point_in_cluster;
+#define MAX_SEND_SIZE 80
+#define ERRRATE 0.01
 
-typedef struct K_means {
-    point_in_cluster* points;
-    size_t amount_of_points;
-    Point* clusters; 
-    size_t amount_of_clusters;
-    size_t amount_of_changed_points;
-} K_means;
+
+#define SORT_MSG 100
+#define CENTER_MSG 200
+#define TO_PARENT_MSG 300
 
 int create_points (K_means** k_means,size_t points,size_t clusters);
-int find_cluster_center (K_means const* k_means, size_t cluster_number);
 int proceed_algorithm (K_means* k_means);
-int clusters_output (K_means const* k_means);
-int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t* changed);
 void start_child_work(int msgid, K_means* kmeans);
 int delete_points (K_means** k_means);
+int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t* changed);
 #endif

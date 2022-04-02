@@ -1,28 +1,10 @@
 #include "k_means.h"
-#include "../point/point.h"
-#define ERRRATE 0.01
 
-int find_cluster_center (K_means const* k_means, size_t cluster_number) {
-    size_t amount_of_points_in_cluster = 0;
-    Point result = {0,0,0};
-    for (size_t i=0; i<k_means->amount_of_points; i++) {
-         if (k_means->points[i].cluster_number==cluster_number) {
-            result.x+=k_means->points[i].point.x;
-            result.y+=k_means->points[i].point.y;
-            result.z+=k_means->points[i].point.z;  
-            amount_of_points_in_cluster++;
-        }
-    }
-    if (amount_of_points_in_cluster > 0) {
-        k_means->clusters[cluster_number].x = result.x / amount_of_points_in_cluster;    
-        k_means->clusters[cluster_number].y = result.y / amount_of_points_in_cluster;
-        k_means->clusters[cluster_number].z = result.z / amount_of_points_in_cluster;
-    }
-   return 0;
-}
-
-int create_points (K_means** k_means,size_t points,size_t clusters) {
+int create_points (K_means** k_means, size_t points, size_t clusters) {
     K_means* temp = (K_means*)malloc(sizeof(K_means));
+    if (temp==NULL) {
+      return (-1);
+    }
     temp->amount_of_clusters=clusters;
     temp->amount_of_points=points;
     if (temp->amount_of_clusters>temp->amount_of_points) {
@@ -31,7 +13,13 @@ int create_points (K_means** k_means,size_t points,size_t clusters) {
     }
     temp->amount_of_changed_points = temp->amount_of_points;
     temp->points=(point_in_cluster*)malloc(temp->amount_of_points*sizeof(point_in_cluster));
+    if (temp->points==NULL) {
+      return (-1);
+    }
     temp->clusters=(Point*)malloc(temp->amount_of_clusters*sizeof(Point));
+    if (temp->clusters==NULL) {
+      return (-1);
+    }
     for (size_t i=0; i<temp->amount_of_points;i++) {
         temp->points[i].point.x=rand()%50;
         temp->points[i].point.y=rand()%50;
@@ -43,7 +31,10 @@ int create_points (K_means** k_means,size_t points,size_t clusters) {
 }
 
 int proceed_algorithm (K_means* k_means) {
-    for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
+  if (k_means==NULL) {
+    return (-1);
+  } 
+  for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
     k_means->clusters[i] = k_means->points[i].point;
   }
     for (size_t i = 0, k = 0; i < k_means->amount_of_clusters; ++i) {
@@ -59,7 +50,9 @@ int proceed_algorithm (K_means* k_means) {
   }
 
   while (((double)k_means->amount_of_changed_points / (double)k_means->amount_of_points )>ERRRATE) {
-    sort_cluster(k_means, 0, k_means->amount_of_points) ;
+    if (sort_cluster(k_means, 0, k_means->amount_of_points)) {
+      return (-1);
+    }
     for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
       if (find_cluster_center(k_means, i)) {
         return 1;
@@ -71,8 +64,11 @@ int proceed_algorithm (K_means* k_means) {
 
 
 int delete_points (K_means** k_means) {
-    K_means* temp = *k_means;
-    if (temp->points != NULL) {
+   if (k_means==NULL) {
+    return (-1);
+  } 
+  K_means* temp = *k_means;
+  if (temp->points != NULL) {
     free(temp->points);
     temp->points = NULL;
   }
@@ -81,24 +77,17 @@ int delete_points (K_means** k_means) {
     temp->clusters = NULL;
   }
   free(temp);
-  temp = NULL;
   *k_means = temp;
    return 0;
 }
 
-int clusters_output (K_means const* k_means) {
-    for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
-   // printf("num: %zu, x: %f, y: %f\n", i, k_means->clusters[i].x, k_means->clusters[i].y);
-        for (size_t j = 0; j < k_means->amount_of_points; ++j) {
-            if (k_means->points[j].cluster_number == i) {
-               // printf("x: %f, y: %f\n", k_means->points[j].point.x, k_means->points[j].point.y);
-      }
-    }
-  }
-  return 0;
-}
-
 int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end) {
+   if (k_means==NULL) {
+    return (-1);
+  } 
+  if (batch_start>batch_end) {
+    return (-1);
+  }
   k_means->amount_of_changed_points = 0;
   for (size_t i = batch_start; i < batch_end; ++i) {
     double dist_min = 0;

@@ -15,6 +15,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${KMEANS_INCLUDE_DIRS})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${KMEANS_LIBRARIES} GTest::GTest GTest::Main)
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${KMEANSCOMMON_INCLUDE_DIRS})
+ 
+target_link_libraries(${PROJECT_NAME} PRIVATE ${KMEANSCOMMON_LIBRARIES} GTest::GTest GTest::Main)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${POINT_INCLUDE_DIRS})
 

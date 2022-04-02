@@ -1,6 +1,5 @@
 #ifndef HW2_POINT_H
 #define HW2_POINT_H
-#define SUCCESS 0
 
 typedef struct Point {
     double x;

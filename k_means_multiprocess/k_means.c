@@ -1,23 +1,4 @@
 #include "k_means.h"
-#include "../point/point.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/ipc.h>
-#include <sys/types.h>
-#include <sys/msg.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#include <signal.h>
-#include <sys/mman.h>
-
-#define MAX_SEND_SIZE 80
-#define ERRRATE 0.01
-
-
-#define SORT_MSG 100
-#define CENTER_MSG 200
-#define TO_PARENT_MSG 300
 
 static int phase_num = 0;
 
@@ -77,12 +58,15 @@ int create_points (K_means** k_means,size_t points,size_t clusters) {
         temp->points[i].cluster_number=0;
     }
     *k_means = temp;
-    printf ("Я узбек 1\n");
+
     printf ("Success create!\n");
     return 0;
 }
 
 int delete_points (K_means** k_means) {
+  if (k_means==NULL) {
+    return (-1);
+  } 
     K_means* temp = *k_means;
     if (temp->points != NULL) {
         munmap(temp->points, temp->amount_of_points*sizeof(point_in_cluster));
@@ -136,6 +120,9 @@ void start_child_work(int msgid, K_means* kmeans) {
 }
 
 int proceed_algorithm (K_means* k_means) {
+  if (k_means==NULL) {
+    return (-1);
+  } 
     for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
     k_means->clusters[i] = k_means->points[i].point;
   }
@@ -146,10 +133,14 @@ int proceed_algorithm (K_means* k_means) {
     pids[i] = fork();
     if (pids[i] == -1) {
       printf("fork failed\n");
+      for (size_t j=0; j<i; j++) {
+        kill(pids[i], SIGUSR1);
+      }
       return -1;
     } else if (pids[i] == 0) {
       start_child_work(msgid, k_means);
     } else {
+      exit (0);
     }
   }
   char send_tmp[MAX_SEND_SIZE] = {0};
@@ -193,29 +184,13 @@ int proceed_algorithm (K_means* k_means) {
     kill(pids[i], SIGKILL);
   }
   msgctl(msgid, IPC_RMID, NULL);
-  return SUCCESS;
-}
-
-int find_cluster_center (K_means const* k_means, size_t cluster_number) {
-    size_t amount_of_points_in_cluster = 0;
-    Point result = {0,0,0};
-    for (size_t i=0; i<k_means->amount_of_points; i++) {
-         if (k_means->points[i].cluster_number==cluster_number) {
-            result.x+=k_means->points[i].point.x;
-            result.y+=k_means->points[i].point.y;
-            result.z+=k_means->points[i].point.z;  
-            amount_of_points_in_cluster++;
-        }
-    }
-    if (amount_of_points_in_cluster > 0) {
-        k_means->clusters[cluster_number].x = result.x / amount_of_points_in_cluster;    
-        k_means->clusters[cluster_number].y = result.y / amount_of_points_in_cluster;
-        k_means->clusters[cluster_number].z = result.z / amount_of_points_in_cluster;
-    }
-   return 0;
+  return 0;
 }
 
 int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t* changed) {
+  if (k_means==NULL) {
+    return (-1);
+  } 
   k_means->amount_of_changed_points = 0;
   *changed = 0;
   for (size_t i = batch_start; i < batch_end; ++i) {
@@ -236,18 +211,6 @@ int sort_cluster(K_means* k_means, size_t batch_start, size_t batch_end, size_t*
     if (k_means->points[i].cluster_number != near_cluster) {
       ++(*changed);
       k_means->points[i].cluster_number = near_cluster;
-    }
-  }
-  return 0;
-}
-
-int clusters_output (K_means const* k_means) {
-    for (size_t i = 0; i < k_means->amount_of_clusters; ++i) {
-   // printf("num: %zu, x: %f, y: %f\n", i, k_means->clusters[i].x, k_means->clusters[i].y);
-        for (size_t j = 0; j < k_means->amount_of_points; ++j) {
-            if (k_means->points[j].cluster_number == i) {
-               // printf("x: %f, y: %f\n", k_means->points[j].point.x, k_means->points[j].point.y);
-      }
     }
   }
   return 0;
